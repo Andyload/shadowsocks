@@ -7,9 +7,6 @@
 补充：如果后面想查看SSR账号信息的话，输入以下命令即可。
 	bash ssr.sh
 
-
-
-
 int[] newArr;
     public int[] maxNumber(int[] nums1, int[] nums2, int k) {
         newArr = new int[k];
@@ -19,12 +16,30 @@ int[] newArr;
     }
 
     public int[] getFinalResult(ArrManager arrManager1, int[] nums1, ArrManager arrManager2, int[] nums2, int k){
+        int[] result = {0};
         for(int i = Math.min(nums1.length, k); i >= 0; i--){
-            getMaxNumber(arrManager1, nums1, i);
+            int[] arrNum1 = getMaxNumber(arrManager1, nums1, i);
+            int[] arrNum2 = getMaxNumber(arrManager2, nums2, k - i);
+            int[] res = mergeArr(arrNum1,arrNum2);
+            res = compareTo(res, result);
+            
         }
+        return result;
+        
+    }
+
+    public int[] compareTo(int[] nums1, int[] nums2){
+
+    }
+
+    public int[] mergeArr(int[] nums1, int[] nums2){
+        
     }
 
     public int[] getMaxNumber(ArrManager arrManager, int[] nums, int size){
+        if(size == 0){
+            return new int[0];
+        }
         int[] arr = new int[size];
         int start = 0;
         if(nums.length - arrManager.maxIndex >= size){
@@ -43,11 +58,30 @@ int[] newArr;
         } else {
             //代表maxIndex只能作为左边开始的第二位后面的数
             LinkedList<Integer> lst = new LinkedList<>();
-            int rightNum = nums.length - arrManager.maxIndex;
-            int leftNum = size - right;
-            while(start < arrManager.maxIndex){
-                lst.addLast();
+            int leftNum = size - (nums.length - arrManager.maxIndex);
+            int index = 0;
+            while(index < arrManager.maxIndex){
+                lst.addLast(nums[index]);
+                if(lst.size() > length){
+                    lst.poll();
+                }
+                if(arrManager.arr[index] == index){
+                    index++;
+                } else {
+                    index = arrManager.arr[index];
+                }
             }
+
+            while(!lst.isEmpty()){
+                arr[start++] = lst.poll();
+            }
+            arr[start++] = nums[arrManager.maxIndex];
+
+            index = arrManager.maxIndex + 1;
+            while(index < nums.length){
+                arr[start++] = nums[index++];
+            }
+            
         }
         return arr;
     }
